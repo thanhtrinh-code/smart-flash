@@ -8,13 +8,8 @@ import toast from 'react-hot-toast';
 export default function AddField({topic, addFlashcard, setTopic, initial}) {
   const {user} = useUser();
   const userId = user.id;
-  const prevTopic = topic;
   if(!initial) return null;  // Only show when initial is true.
   async function handleAddCollection(){
-    if(prevTopic === topic){
-      toast.error('Please enter a different topic. This topic is already existed');
-      return; 
-    }
     try {
       // Reference to the document where `topic` is the document ID under the `collection` sub-collection
       const userInventoryDocRef = doc(db, 'users', userId, 'collection', topic);
