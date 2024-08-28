@@ -1,0 +1,11 @@
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.cl-avatarBox {
+  width: 2.75rem;
+  height: 2.75rem;
+}
