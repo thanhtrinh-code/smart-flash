@@ -21,8 +21,7 @@ export default function Page() {
       <>
         <HomeNavBar feature={feature} handleChange={handleChange}/>
         {feature === '' && <Box>Home</Box>}
-        {feature === 'generator' && <Generator/>}
-        {feature === 'games' && <Games/>}
+        {feature === 'generator' && <Generator setFeature={setFeature}/>}
         {feature === 'collection' && <Collections/>}
       </>
     )

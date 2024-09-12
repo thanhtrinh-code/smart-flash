@@ -1,15 +1,10 @@
-import { Box, Button, Typography} from '@mui/material'
+import { Box, MenuItem, Select, Typography} from '@mui/material'
 import { IoIosAddCircle } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import PrevAndNext from './PrevAndNext';
-
-
 export default function MainDisplay({
     flashcards, index, flipped, addFlashcard, handleNext, handlePrev, setFlipped, handleAdd, handleDelete
 }) {
-  if(!flashcards){
-    return;
-  }
   
   function handleSpaceFlipped(e){
     if(e.keyCode === 32){

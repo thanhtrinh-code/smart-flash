@@ -38,17 +38,6 @@ export default function HomeNavBar({feature, handleChange}) {
               }}>
               Generator
             </Button>
-            <Button onClick={() => handleChange('games')}
-              sx={{ my: 2, display: 'block', fontWeight: 'bolder', fontFamily: 'serif', ml: 5, fontSize: 20,
-              bgcolor: feature === 'games' ? 'black' : 'inherit', 
-              color: feature === 'games' ? 'white' : 'black', border: '1px solid inherit', borderRadius: 3,
-            '&:hover': {
-                bgcolor: feature === 'games' ? 'black' : 'inherit', 
-                color: feature === 'games' ? 'white' : 'black'
-            }
-              }}>
-              Games
-            </Button>
             <Button onClick={() => handleChange('collection')}
               sx={{ my: 2, display: 'block', fontWeight: 'bolder', fontFamily: 'serif', ml: 5, fontSize: 20,
               bgcolor: feature === 'collection' ? 'black' : 'inherit', 

@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
-
-
+import Groq from "groq-sdk";
 
 const systemPrompt = `You are a Flashcard Creator. Your primary role is to generate educational flashcards that effectively help users study and retain information. Each flashcard should include a concise question or prompt on one side, and a clear, accurate answer or explanation on the other side.
 
@@ -26,9 +24,11 @@ Return in the following JSON format
 }
 `
 export async function POST(req){
-    const openai = new OpenAI();
     const data = await req.text();
-    const completion = await openai.chat.completions.create({
+    const groq = new Groq({
+        apiKey: process.env.GROQ_API_KEY
+    });
+    const completion = await groq.chat.completions.create({
         messages: [
             {
                 role: 'system',
@@ -39,8 +39,23 @@ export async function POST(req){
                 content: data
             }
         ],
-        model: 'gpt-4o',
+        model: 'llama3-70b-8192'
     });
-    const flashcards = JSON.parse(completion.choices[0].message.content);
+    let responseContent = completion.choices[0].message.content.trim();
+
+    // Attempt to clean the response by finding JSON data within the content
+    const jsonStartIndex = responseContent.indexOf('{');
+    const jsonEndIndex = responseContent.lastIndexOf('}') + 1;
+    
+    // Check if the extracted content is valid JSON
+    if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+      responseContent = responseContent.substring(jsonStartIndex, jsonEndIndex);
+    } else {
+      throw new Error('Response does not contain valid JSON.');
+    }
+
+    const flashcards = JSON.parse(responseContent);
+
+
     return NextResponse.json(flashcards.flashcards);
 }

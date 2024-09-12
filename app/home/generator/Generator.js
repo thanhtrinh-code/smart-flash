@@ -1,13 +1,12 @@
 "use client"
-import { Box, Button, } from '@mui/material'
+import { Box } from '@mui/material'
 import {useState } from 'react'
-import AddField from './AddField';
 import GenerateField from './GenerateField';
 import LoadingSpinner from './LoadingSpinner';
-import {motion} from 'framer-motion';
 import MainDisplay from './MainDisplay';
 import toast from 'react-hot-toast';
 import FinishesButtons from './FinishesButtons';
+import Provider from './Provider';
 
 
 const dummy = [
@@ -53,23 +52,21 @@ const dummy = [
   }
 ]
 
-export default function Generator() {
+export default function Generator({setFeature}) {
   const [text, setText] = useState('');
-  const [flashcards, setFlashcards] = useState([]);
+  const [flashcards, setFlashcards] = useState(null);
   const [flipped, setFlipped] = useState(false);
-  const [topic, setTopic] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const [index, setIndex] = useState(0);
   const [addFlashcard, setAddFlashcard] = useState([]);
-  const [initial, setInitial] = useState(false); // change this to false
+  const [value, setValue] = useState('google');
   function handleGenerate(){
-    async function handleSubmit(){
-      if(!text) {
-        toast.error("Please Enter a Topic");
-        return;
-      }
+    if(!text) {
+      toast.error("Please Enter a Topic you want to generate");
+      return;
+    }
+    async function handleOpenAi(){
       try {
-        setInitial(false);
         setIsloading(true);
         const response = await fetch('api/generate', {
           method: 'POST',
@@ -81,16 +78,60 @@ export default function Generator() {
         const data = await response.json();
         setIndex(0);
         setFlipped(false);
-        setTopic('');
         setFlashcards(data);
     } catch (error) {
         console.log(error);
       } finally {
         setIsloading(false);
-        setInitial(true);
       }
     }
-    handleSubmit();
+    async function handleMeta(){
+      try {
+        setIsloading(true);
+        const response = await fetch('api/llama', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: text
+        })
+        const data = await response.json();
+        setIndex(0);
+        setFlipped(false);
+        setFlashcards(data);
+    } catch (error) {
+        console.log(error);
+      } finally {
+        setIsloading(false);
+      }
+    }
+    async function handleGeimini(){
+      try {
+        setIsloading(true);
+        const response = await fetch('api/geimini', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: text
+        })
+        const data = await response.json();
+        setIndex(0);
+        setFlipped(false);
+        setFlashcards(data);
+    } catch (error) {
+        console.log(error);
+      } finally {
+        setIsloading(false);
+      }
+    }
+    if(value === 'openai'){
+      handleOpenAi();
+    }else if(value === 'meta'){
+      handleMeta();
+    }else{
+      handleGeimini();
+    }
   }
   function handleAdd(flashcard){
     setAddFlashcard((prevFlashcards) => [...prevFlashcards, flashcard]);
@@ -109,14 +150,14 @@ export default function Generator() {
     setFlipped(false);
   }
   return (
-    <Box  width ='100vw' maxHeight='100vh' bgcolor='#e8e8e8'>
+    <Box  width ='100vw' maxHeight='100vh' bgcolor='#e8e8e8' overflow='scroll'>
       <GenerateField input={text} handleGenerate={handleGenerate} setInput={setText} />
       <Box height="90vh" bgcolor='#e8e8e8' sx={{display:'flex', flexDirection: 'column', alignItems: 'center', mt: 5}}>
-        { index === flashcards.length && <AddField topic={topic} addFlashcard={addFlashcard} setTopic={setTopic} initial={initial}/>}
-        
         {isLoading ?  <LoadingSpinner isLoading={isLoading}/> : 
-        index === flashcards.length ? 
-        <FinishesButtons handlePrev={handlePrev} handleGenerate={handleGenerate} initial={initial} setInitial={setInitial}/>
+         index === flashcards?.length ? 
+        <FinishesButtons handlePrev={handlePrev} handleGenerate={handleGenerate} addFlashcard={addFlashcard} setFeature={setFeature}/>
+        : !flashcards ? 
+        <Provider value={value} setValue={setValue}/>
         : <MainDisplay flashcards={flashcards} index={index} flipped={flipped}
         addFlashcard={addFlashcard} handleNext={handleNext} handlePrev={handlePrev} setFlipped={setFlipped}
         handleAdd={handleAdd} handleDelete={handleDelete}

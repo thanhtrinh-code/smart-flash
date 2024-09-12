@@ -1,14 +1,16 @@
+"use client"
 import { db } from '@/firebase';
 import { useUser } from '@clerk/nextjs';
 import { Box, Button, TextField } from '@mui/material'
 import { doc, setDoc } from 'firebase/firestore';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 
-export default function AddField({topic, addFlashcard, setTopic, initial}) {
+export default function AddField({addFlashcard, setFeature}) {
   const {user} = useUser();
   const userId = user.id;
-  if(!initial) return null;  // Only show when initial is true.
+  const [topic, setTopic] = useState('');
   async function handleAddCollection(){
     try {
       // Reference to the document where `topic` is the document ID under the `collection` sub-collection
@@ -21,12 +23,13 @@ export default function AddField({topic, addFlashcard, setTopic, initial}) {
 
       // Optionally reset the topic or perform any other actions after successful addition
       toast.success('Collection added successfully!');
+      setFeature('collection');
     } catch (error) {
       console.error('Error adding collection: ', error);
     }
   }
   return (
-    <Box display='flex' justifyContent='center' gap={3} alignContent='center' pt={3}>
+    <Box display='flex' justifyContent='center' gap={3} alignContent='center'>
         <TextField id='Name' required value={topic} label='Collection Name' onChange={(e) => setTopic(e.target.value)}
         sx={{
           '& .MuiOutlinedInput-root': { borderRadius: '20px', border: '1px solid black' }, width: '20vw',
