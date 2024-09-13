@@ -7,6 +7,7 @@ export default function MainDisplay({
 }) {
   
   function handleSpaceFlipped(e){
+
     if(e.keyCode === 32){
       setFlipped(flipped => !flipped);
     }
@@ -23,7 +24,7 @@ export default function MainDisplay({
             : <IoIosAddCircle size={30} onClick={() => handleAdd(flashcards[index])} style={{cursor: 'pointer'}}/>
           }
           </Box>
-          <Box height='60%' width='50vw' onClick={handleClickFlip}
+          <Box height='60%' width='50vw' onClick={handleClickFlip} onKeyDown={handleSpaceFlipped} tabIndex={0}
         sx={{
           perspective: '1000px',
           '& > div': {
@@ -34,7 +35,8 @@ export default function MainDisplay({
             height: '100%',
             boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
             transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            borderRadius: 10
+            borderRadius: 10,
+
           },
           '& > div > div': {
             position: 'absolute',
@@ -51,6 +53,9 @@ export default function MainDisplay({
           },
           '& > div > div:nth-of-type(2)': {
             transform: 'rotateY(180deg)',
+          },
+          '&:focus': {
+            outline: 'none', // Remove focus outline
           },
         }}
         >

@@ -75,7 +75,7 @@ export default function Collections() {
         {collections.filter((card) => {
           return card.id.toLowerCase() === ''? card : card.id.toLowerCase().includes(search.toLowerCase());
         }).map(collection => (
-            <Grid item xs={8} md={3} key={collection.id} sx={{display: 'flex', justifyContent: 'center'}}>
+            <Grid item xs={8} md={4} lg={3} key={collection.id} sx={{display: 'flex', justifyContent: 'center'}}>
             <CardActionArea onClick={() => handleClick(collection.id)}
               sx={{
                 borderRadius: 5, height: '12rem',
