@@ -1,7 +1,73 @@
-import { Box, Button, Typography } from "@mui/material";
+'use client'
+import { db } from "@/firebase";
+import { useUser } from "@clerk/nextjs";
+import { Box, Button, Menu, Typography, MenuItem } from "@mui/material";
+import { deleteDoc, doc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
-export default function FlashcardTitle({search}) {
+export default function FlashcardTitle({search, handleEdit}) {
+  const {user} = useUser();
+  const router = useRouter();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleDeleteConfirm = () => {
+    handleClose();
+    setConfirmDelete(true);
+  };
+  async function handleDelete(){
+    const userId = user.id;
+    const docRef = doc(db, 'users', userId, 'collection', search);
+    try{
+      await deleteDoc(docRef);
+      localStorage.removeItem(`flashcards_${search}`);
+      router.push('home');
+    }catch(error){
+      console.error('Error deleting collection:', error);
+    }
+  }
   return (
+    <>
+    {confirmDelete && (
+  <Box
+    sx={{
+      bgcolor: 'rgba(0, 0, 0, 0.5)',  
+      width: '100%',
+      height: '100%',
+      position: 'fixed',              
+      top: 0,
+      left: 0,
+      display: 'flex',
+      justifyContent: 'center',       
+      alignItems: 'center',           
+      zIndex: 9999,                  
+    }}
+  >
+    <Box
+      sx={{
+        bgcolor: '#fff',              
+        padding: '2em',
+        borderRadius: '10px',
+        boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.1)',  
+        textAlign: 'center',
+      }}
+    >
+      <Typography variant="h6" mb={2}>
+        Are you sure you want to delete this item?
+      </Typography>
+      <Button variant='contained' onClick={() => setConfirmDelete(del => !del)} sx={{ marginRight: '3em',  }}>Cancel</Button>
+      <Button variant="contained" onClick={handleDelete} color="error">Delete</Button>
+    </Box>
+  </Box>
+)}
     <Box
   width='100%'
   sx={{
@@ -42,7 +108,23 @@ export default function FlashcardTitle({search}) {
         },
       }}
     >
-      <HiDotsVertical size={28}/>
+      <HiDotsVertical size={28} onClick={handleClick}/>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          paper: {
+            style: {
+              maxHeight: 48 * 4.5,
+              width: '20ch',
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={handleEdit}>Edit Collection</MenuItem>
+        <MenuItem onClick={handleDeleteConfirm}>Delete Collection</MenuItem>
+      </Menu>
     </Box>
   </Box>
   <Box 
@@ -50,7 +132,7 @@ export default function FlashcardTitle({search}) {
     gap={2} // Space between buttons
   >
     <Button
-      variant='contained'
+      variant='contained' onClick={() => router.push(`quiz?id=${search}`)}
       sx={{
         backgroundColor: '#4285F4', // Primary button color
         color: '#fff',
@@ -67,7 +149,7 @@ export default function FlashcardTitle({search}) {
       Quiz
     </Button>
     <Button
-      variant='contained'
+      variant='contained' onClick={() => router.push(`match?id=${search}`)}
       sx={{
         backgroundColor: '#34A853',
         color: '#fff',
@@ -84,7 +166,7 @@ export default function FlashcardTitle({search}) {
       Match
     </Button>
     <Button
-      variant='contained'
+      variant='contained' onClick={() => router.push(`learn?id=${search}`)}
       sx={{
         backgroundColor: '#FBBC05',
         color: '#fff',
@@ -111,6 +193,7 @@ export default function FlashcardTitle({search}) {
   >
     Click on the card to flip or hit Space to flip
   </Typography>
-</Box>
+    </Box>
+    </>
   )
 }

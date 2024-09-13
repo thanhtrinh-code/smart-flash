@@ -146,8 +146,12 @@ export default function Generator({setFeature}) {
     setFlipped(false);
   }
   function handlePrev(){
-    setIndex(index => index - 1);
-    setFlipped(false);
+    if(index <= 0){
+      setIndex(0);
+    }else{
+      setIndex(index => index - 1);
+      setFlipped(false);
+    }
   }
   return (
     <Box  width ='100vw' maxHeight='100vh' bgcolor='#e8e8e8' overflow='scroll'>
@@ -160,7 +164,7 @@ export default function Generator({setFeature}) {
         <Provider value={value} setValue={setValue}/>
         : <MainDisplay flashcards={flashcards} index={index} flipped={flipped}
         addFlashcard={addFlashcard} handleNext={handleNext} handlePrev={handlePrev} setFlipped={setFlipped}
-        handleAdd={handleAdd} handleDelete={handleDelete}
+        handleAdd={handleAdd} handleDelete={handleDelete} setIndex={setIndex}
         />
         }
       </Box>

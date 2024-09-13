@@ -2,20 +2,32 @@ import { Box, MenuItem, Select, Typography} from '@mui/material'
 import { IoIosAddCircle } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import PrevAndNext from './PrevAndNext';
+import { useEffect } from 'react';
 export default function MainDisplay({
-    flashcards, index, flipped, addFlashcard, handleNext, handlePrev, setFlipped, handleAdd, handleDelete
+    flashcards, index, flipped, addFlashcard, handleNext, handlePrev, setFlipped, handleAdd, handleDelete, setIndex
 }) {
   
-  function handleSpaceFlipped(e){
-
-    if(e.keyCode === 32){
-      setFlipped(flipped => !flipped);
-    }
-  }
   function handleClickFlip(){
     setFlipped(flipped => !flipped);
   }
-
+  useEffect(() => {
+    function handleKeyDown(e){
+      if(e.key === 'ArrowRight'){
+        handleNext();
+      }
+      if(e.key === 'ArrowLeft'){
+        handlePrev();
+      }
+      if(e.key === ' '){
+        handleClickFlip();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  if(index < 0){
+    setIndex(0);
+  }
   return (
     <> 
           <Box width='50vw' display='flex' justifyContent='flex-end' mb={1}>
@@ -24,7 +36,7 @@ export default function MainDisplay({
             : <IoIosAddCircle size={30} onClick={() => handleAdd(flashcards[index])} style={{cursor: 'pointer'}}/>
           }
           </Box>
-          <Box height='60%' width='50vw' onClick={handleClickFlip} onKeyDown={handleSpaceFlipped} tabIndex={0}
+          <Box height='60%' width='50vw' onClick={handleClickFlip}
         sx={{
           perspective: '1000px',
           '& > div': {

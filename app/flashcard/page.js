@@ -2,7 +2,7 @@
 
 import { db } from "@/firebase";
 import { useUser } from "@clerk/nextjs"
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Divider, TextField, Typography } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import LoadingSpinner from "../home/generator/LoadingSpinner";
 import FlashcardTitle from "./_flashcardComponent/FlashcardTitle";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
-const StyledSpinner = {
+export const StyledSpinner = {
   display: 'flex', 
   width: '100%',
   height: '100%',
@@ -44,13 +44,14 @@ const dummy = [
 }
 ]
 export default function Page() {
+
     const {user} = useUser();
     const router = useRouter();
     const searchParams = useSearchParams();
     const search = searchParams.get('id');
 
     const [flashcards, setFlashcards] = useState(dummy);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [index, setIndex] = useState(0);
     const [flipped, setFlipped] = useState(false);
     function handleClickFlip(){
@@ -63,47 +64,63 @@ export default function Page() {
 
         async function getFlashcard(){
           try {
-            setIsLoading(true);
             const docRef = doc(db, 'users', user.id, 'collection', search); // Use doc() to get a specific document
             const docs = await getDoc(docRef); // Fetch the document
-            setFlashcards(docs.data()['flashcards']);
+            const flashcard = docs.data()['flashcards'];
+            
+            localStorage.setItem(`flashcards_${search}`, JSON.stringify(flashcard));
+            setFlashcards(flashcard);
           } catch (error) {
             console.error;
           } finally {
             setIsLoading(false);
           }
         }
-        const handleKeyDown = (event) => {
-          if (event.key === ' ') {
-            event.preventDefault(); // Prevent default space key behavior
-            setFlipped(flipped => !flipped);
-          }
-          if(event.key === 'ArrowLeft'){ 
-              setIndex(index => (index - 1) % flashcards?.length);
-          }
-          if(event.key === 'ArrowRight'){
-            setIndex(index => (index + 1) % flashcards?.length);
-          }
+        if(localStorage.getItem(`flashcards_${search}`)){
+          const flashcard = JSON.parse(localStorage.getItem(`flashcards_${search}`));
+          setFlashcards(flashcard);
+          setIsLoading(false);
+        }else{
+          getFlashcard();
+        }
+    },[user, search, router, setIsLoading, setFlashcards,]);
+
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === ' ') {
+          event.preventDefault(); // Prevent default space key behavior
+          setFlipped(flipped => !flipped);
+        }
+        if(event.key === 'ArrowLeft'){ 
+            setIndex(index => (index - 1) % flashcards?.length);
+        }
+        if(event.key === 'ArrowRight'){
+          setIndex(index => (index + 1) % flashcards?.length);
+        }
+
+      };
   
-        };
-    
-        // Add event listener for keydown
-        window.addEventListener('keydown', handleKeyDown);
-        getFlashcard();
-        // Clean up the event listener on component unmount
-        return () => {
-          window.removeEventListener('keydown', handleKeyDown);
-        };
-    },[user, search, router, setIndex]);
+      // Add event listener for keydown
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [setFlipped, setIndex]);
     if(index < 0){
       setIndex(0);
+    }
+    if(index >= flashcards?.length){
+      setIndex(flashcards?.length - 1);
+    }
+    function handleEdit(){
+      router.push(`edit-flashcard?id=${search}`)
     }
   return (
     <Box width='100vw' height='100vh' bgcolor='white'>
       {isLoading ?  <Box sx={StyledSpinner}><LoadingSpinner isLoading={isLoading}/></Box>  
       : (
         <>
-        <FlashcardTitle search={search}/>
+        <FlashcardTitle search={search} handleEdit={handleEdit}/>
         <Box width='100vw' height='40%' display='flex' justifyContent='center'>
           <Box height='100%' width='50%' onClick={handleClickFlip} 
         sx={{
@@ -132,6 +149,8 @@ export default function Page() {
             boxSizing: 'border-box', border: '2px solid black',
             backgroundColor: 'white', // Add background color to the card sides
             borderRadius: 10, // Match the border radius of the parent Box
+            overflow: 'hidden',
+            textAlign: 'center'
           },
           '& > div > div:nth-of-type(2)': {
             transform: 'rotateY(180deg)',
@@ -143,7 +162,13 @@ export default function Page() {
         >
           <div>
             <div>
-              <Typography variant='h6' fontFamily='sans-serif' fontSize={25}>
+              <Typography variant='h6' fontFamily='sans-serif' fontSize={25}
+              sx={{
+                wordBreak: 'break-word', // Break long words
+                overflowWrap: 'break-word', // Break long words for wrapping
+                textOverflow: 'ellipsis', // Add ellipsis for overflowed text if needed
+              }}
+              >
                 {flashcards[index]?.front}
               </Typography>
             </div>
