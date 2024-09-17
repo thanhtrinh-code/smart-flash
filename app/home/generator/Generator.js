@@ -54,7 +54,7 @@ const dummy = [
 
 export default function Generator({setFeature}) {
   const [text, setText] = useState('');
-  const [flashcards, setFlashcards] = useState(dummy);
+  const [flashcards, setFlashcards] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [index, setIndex] = useState(0);

@@ -63,7 +63,7 @@ export default function FinishesButtons({
                 </Box>
               </Box>
             ))}
-            <div ref={overflowCardsRef}/>
+            {/* <div ref={overflowCardsRef}/> */}
               <Box width='100%' display='flex' justifyContent='center' alignContent='center' pb={3} gap={3}>
                 <Button
               variant='outlined'

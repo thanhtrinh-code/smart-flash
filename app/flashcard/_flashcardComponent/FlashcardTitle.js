@@ -80,9 +80,11 @@ export default function FlashcardTitle({search, handleEdit}) {
     gap: 2, // Space between items
   }}
 >
-  <Box display='flex' gap={65}
-    alignItems='center'
+  <Box display='flex' width='100%'
+    justifyContent='space-between'
+    gap={1}
   >
+    <Button variant="contained" onClick={() => router.push('home')}>Home</Button>
     <Typography 
     variant='h4' 
     fontFamily='serif'
