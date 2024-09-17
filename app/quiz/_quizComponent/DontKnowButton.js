@@ -1,10 +1,26 @@
 import { Box, Button } from '@mui/material'
 import React from 'react'
 
-export default function DontKnowButton() {
+export default function DontKnowButton({handleClick, answer, setOpenCamera, openCamera}) {
   return (
-    <Box width='100%' display='flex' justifyContent='flex-end'>
-    <Button
+    <Box width='100%' display='flex' sx={{
+      justifyContent: {
+        xs: 'flex-end',
+        lg: 'space-between',
+      }
+    }}>
+      <Button variant='contained' onClick={() => setOpenCamera(open => !open)}
+      sx={{
+      padding: '0.3rem',
+      fontSize: '1rem',
+      display: {
+        xs: 'none',
+        lg: 'flex',
+      }
+      }}>
+        {openCamera ? 'Close Camera' : 'Open Camera'}
+      </Button>
+    <Button onClick={handleClick} disabled={answer}
     sx={{
       padding: '0.3rem',
       fontSize: '1rem',
@@ -15,6 +31,10 @@ export default function DontKnowButton() {
       '&:hover': {
         backgroundColor: '#0056b3',  // Hover background color
       },
+      width: {
+        xs: '100%',
+        md: 'auto',
+      }
     }}
   >
     Don't Know

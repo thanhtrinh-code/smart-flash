@@ -9,6 +9,7 @@ import LearnHeader from '../learn/_learnComponent/LearnHeader';
 import ContinueButton from '../learn/_learnComponent/ContinueButton';
 import Congrats from './_quizComponent/Congrats';
 import DontKnowButton from './_quizComponent/DontKnowButton';
+import MyCamera from './_handpose/MyCamera';
 
 export default function Page() {
     const searchParams = useSearchParams();
@@ -17,10 +18,11 @@ export default function Page() {
     const [flashcards, setFlashcards] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [options, setOptions] = useState(null);
-    const [curIndex, setCurIndex] = useState(4);
+    const [curIndex, setCurIndex] = useState(0);
     const [correct, setCorrect] = useState(0);
     const [answer, setAnswer] = useState(false);
     const [option, setOption] = useState(null);
+    const [openCamera, setOpenCamera] = useState(false);
 
     useEffect(() => {
         async function fetchFlashcards(){
@@ -91,6 +93,11 @@ export default function Page() {
             const other = incorrectOptions.slice(0, 3);
             setOptions([...other, flashcards[curIndex + 1]]);
         }
+    }
+    function handleDontKnow(){
+      setOption(flashcards[curIndex].back);
+      setAnswer(true);
+      setTimeout(handleContinue, 2000);
     }
   return (
     <Box width='100vw' height='100vh' bgcolor='white' position='relative'>
@@ -167,51 +174,87 @@ export default function Page() {
                     </Box>
                 </Box>
                 <Box width='100%' height='70vh' bgcolor='inherit' position='relative' display='flex' justifyContent='center' pb={10}>
+                    {openCamera && <MyCamera/>}
                     <Box width='60%' bgcolor='#e0deda' boxShadow='0px 4px 8px rgba(0, 0, 0, 0.8)' // Darker shadow for more depth
                             top='3rem' position='absolute' display='flex' flexDirection='column' p={2} // Padding for internal spacing 
                             justifyContent='space-around' pl={3} borderRadius='8px' sx={{
                                 height: {
-                                  xs: '45rem',
+                                  xs: 'auto',
                                   md: '32rem', 
                                 }
                               }}>
                         <LearnHeader question={flashcards[curIndex].front}/>
                         {option?.back === flashcards?.[curIndex].back && <Congrats/>}
                         <Box display='flex' flexWrap='wrap' gap='1rem' justifyContent='center' width='100%'>
-  {options?.map((answer, index) => (
+                        {options?.map((answer, index) => (
+  <Box
+    key={index} 
+    onClick={() => handleOptionClick(answer)}
+    sx={{
+      display: 'flex',
+      alignItems: 'center',    // Vertically center the content
+      justifyContent: {
+        xs: 'center',         // Center content horizontally on small screens
+        md: 'space-between'   // Space content between left and right on medium and larger screens
+      },
+      flexDirection: {
+        xs: 'column',         // Stack items vertically on small screens
+        md: 'row'             // Arrange items in a row on medium and larger screens
+      },
+      flex: {
+        xs: '1 1 100%',       
+        sm: '1 1 calc(50% - 1rem)',
+      },
+      padding: '1rem',
+      border: '2px solid #ccc',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      backgroundColor: '#f5f5f5',
+      textAlign: 'center',
+      fontSize: {
+        xs: '0.875rem',      // Smaller text for mobile
+        sm: '1rem',          // Default size for small screens and up
+      },
+      borderColor: option ? option.back === answer.back ? option.back === flashcards[curIndex].back ? 'green' : 'red' : answer.back === flashcards[curIndex].back ? 'green' : 'none' : 'none',
+
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+      '&:active': {
+        backgroundColor: '#d0d0d0',
+      },
+    }}
+  >
     <Box
-      key={index} 
-      onClick={() => handleOptionClick(answer)}
-      sx={{
-        flex: {
-          xs: '1 1 100%',  // 1 column for extra-small screens (mobile)
-          sm: '1 1 calc(50% - 1rem)',  // 2 columns for small screens and above
-        },
-        padding: '1rem',
-        border: '2px solid #ccc',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        backgroundColor: '#f5f5f5',
-        textAlign: 'center',
-        fontSize: {
-          xs: '0.875rem',  // Smaller text for mobile
-          sm: '1rem',  // Default size for small screens and up
-        },
-        borderColor: option ? option.back === answer.back ? option.back === flashcards[curIndex].back ? 'green' : 'red' : answer.back === flashcards[curIndex].back ? 'green' : 'none' : 'none',
-
-        '&:hover': {
-          backgroundColor: '#e0e0e0',
-        },
-        '&:active': {
-          backgroundColor: '#d0d0d0',
-        },
-      }}
-    >
-
+  sx={{
+    flex: '0 0 auto',
+    marginRight: '1rem',
+    fontWeight: 'bold',
+    border: '1px solid grey',
+    padding: '10px',
+    borderRadius: '10px',
+    backgroundColor: '#f5f5f5',
+    display: {
+      xs: 'none', // Hide on extra-small screens
+      md: 'block', // Show on medium screens and up
+    },
+  }}
+>
+  {index + 1}
+</Box>
+    <div style={{
+      flex: '1 1 auto',       // Allow answer text to grow and take available space
+      textAlign: 'left',      // Align text to the left on larger screens
+      display: {
+        xs: 'none',          // Hide on extra-small screens
+        md: 'block',        // Show on medium screens and up
+      }
+    }}>
       {answer.back}
-    </Box>
-  ))}
-  <DontKnowButton/>
+    </div>
+  </Box>
+))}
+  <DontKnowButton handleClick={handleDontKnow} answer={answer} setOpenCamera={setOpenCamera} openCamera={openCamera}/>
 </Box>
 
   

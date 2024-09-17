@@ -15,6 +15,9 @@
     "@google/generative-ai": "^0.19.0",
     "@mui/material": "^5.16.7",
     "@stripe/stripe-js": "^4.3.0",
+    "@tensorflow-models/handpose": "^0.1.0",
+    "@tensorflow/tfjs": "^4.21.0",
+    "fingerpose": "^0.1.0",
     "firebase": "^10.13.0",
     "framer-motion": "^11.3.29",
     "groq-sdk": "^0.7.0",
@@ -27,6 +30,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-toastify": "^10.0.5",
     "react-type-animation": "^3.2.0",
+    "react-webcam": "^7.2.0",
     "stripe": "^16.8.0"
   },
   "devDependencies": {
