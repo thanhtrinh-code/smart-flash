@@ -1,7 +1,7 @@
 'use client'
 import { Box, Button, LinearProgress, Typography } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StyledSpinner } from '../flashcard/page';
 import LoadingSpinner from '../home/generator/LoadingSpinner';
 import MatchNavBar from './_quizComponent/MatchNavBar';
@@ -24,6 +24,7 @@ export default function Page() {
     const [option, setOption] = useState(null);
     const [openCamera, setOpenCamera] = useState(false);
 
+    const clickInProgress = useRef(false);
     useEffect(() => {
         async function fetchFlashcards(){
           try {
@@ -38,7 +39,9 @@ export default function Page() {
                     const incorrectOptions = jsonFlashcard.filter((_, i) => i !== curIndex);
                     shuffle(incorrectOptions);
                     const other = incorrectOptions.slice(0, 3);
-                    setOptions([...other, jsonFlashcard[curIndex]]);
+                    const newOption = [...other, jsonFlashcard[curIndex]];
+                    shuffle(newOption);
+                    setOptions(newOption);
 
                 }
             }
@@ -55,15 +58,37 @@ export default function Page() {
         function handleKeyDown(e){
             handleContinue();
         }
-        if(answer){
+        if(answer && curIndex < flashcards.length){
             window.addEventListener('keydown', handleKeyDown);
             return () => window.removeEventListener('keydown', handleKeyDown);
         }
-    }, [answer]);
+    }, [answer, curIndex]);
+    useEffect(() => {
+      function handleNumberClick(e){
+        const number = parseInt(e.key, 10);
+        if(number > 0 && number < 5){
+          handleOptionClick(options[number - 1]);
+        }else{
+          return;
+        }
+      }
+      if(flashcards && curIndex < flashcards.length && !option){
+        window.addEventListener('keydown', handleNumberClick);
+        return () => window.removeEventListener('keydown', handleNumberClick);
+      }
+    }, [options, curIndex, option, flashcards]);
 
     
 
+    function handleReset(){
+      setCorrect(0);
+      setCurIndex(0);
+      setAnswer(false);
+      setOption(null);
+      setOpenCamera(false);
+      setFlashcards(null);
 
+    }
     function shuffle(arr){
         for(let i = arr.length - 1 ; i >= 0 ; i--){
             const j = Math.floor(Math.random() * (i + 1));
@@ -71,15 +96,20 @@ export default function Page() {
         }
     }
     function handleOptionClick(newOption){
-        if(option){
+        if(option || clickInProgress.current){
             return;
         }
+        clickInProgress.current = true;
         setOption(newOption);
         if(newOption.back === flashcards[curIndex].back){
             setCorrect(correct + 1);
-            setTimeout(handleContinue, 2000);
+            setTimeout(() => {
+              handleContinue();
+              clickInProgress.current = false;
+          }, 1000);
         }else{
             setAnswer(true);
+            clickInProgress.current = false;
         }
     }
     function handleContinue(){
@@ -91,13 +121,14 @@ export default function Page() {
             const incorrectOptions = flashcards.filter((_, i) => i !== curIndex + 1);
             shuffle(incorrectOptions);
             const other = incorrectOptions.slice(0, 3);
-            setOptions([...other, flashcards[curIndex + 1]]);
+            const newOption = [...other, flashcards[curIndex + 1]];
+            shuffle(newOption);
+            setOptions(newOption);
         }
     }
     function handleDontKnow(){
       setOption(flashcards[curIndex].back);
       setAnswer(true);
-      setTimeout(handleContinue, 2000);
     }
   return (
     <Box width='100vw' height='100vh' bgcolor='white' position='relative'>
@@ -135,7 +166,7 @@ export default function Page() {
       <Typography variant="h6" paragraph >
         Well Done
       </Typography>
-      <Button type='submit' variant="contained" color="success">
+      <Button type='submit' variant="contained" color="success" onClick={handleReset}>
         Restart 🚀
       </Button>
     </Box>
@@ -174,7 +205,7 @@ export default function Page() {
                     </Box>
                 </Box>
                 <Box width='100%' height='70vh' bgcolor='inherit' position='relative' display='flex' justifyContent='center' pb={10}>
-                    {openCamera && <MyCamera/>}
+                    {openCamera && <MyCamera options={options} handleOptionClick={handleOptionClick} handleContinue={handleContinue} option={option}/>}
                     <Box width='60%' bgcolor='#e0deda' boxShadow='0px 4px 8px rgba(0, 0, 0, 0.8)' // Darker shadow for more depth
                             top='3rem' position='absolute' display='flex' flexDirection='column' p={2} // Padding for internal spacing 
                             justifyContent='space-around' pl={3} borderRadius='8px' sx={{
@@ -188,7 +219,7 @@ export default function Page() {
                         <Box display='flex' flexWrap='wrap' gap='1rem' justifyContent='center' width='100%'>
                         {options?.map((answer, index) => (
   <Box
-    key={index} 
+    key={index}
     onClick={() => handleOptionClick(answer)}
     sx={{
       display: 'flex',
@@ -223,6 +254,9 @@ export default function Page() {
       '&:active': {
         backgroundColor: '#d0d0d0',
       },
+      '&:focus': {
+        outline: 'none',
+      },
     }}
   >
     <Box
@@ -250,7 +284,7 @@ export default function Page() {
         md: 'block',        // Show on medium screens and up
       }
     }}>
-      {answer.back}
+      {answer?.back}
     </div>
   </Box>
 ))}

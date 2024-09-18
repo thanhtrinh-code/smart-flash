@@ -6,7 +6,7 @@ export default function DontKnowButton({handleClick, answer, setOpenCamera, open
     <Box width='100%' display='flex' sx={{
       justifyContent: {
         xs: 'flex-end',
-        lg: 'space-between',
+        md: 'space-between',
       }
     }}>
       <Button variant='contained' onClick={() => setOpenCamera(open => !open)}
@@ -15,7 +15,7 @@ export default function DontKnowButton({handleClick, answer, setOpenCamera, open
       fontSize: '1rem',
       display: {
         xs: 'none',
-        lg: 'flex',
+        md: 'flex',
       }
       }}>
         {openCamera ? 'Close Camera' : 'Open Camera'}

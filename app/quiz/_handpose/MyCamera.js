@@ -8,7 +8,7 @@ import { drawHand } from './utilities';
 import * as fp from 'fingerpose';
 import { FiveGesture, FourGesture, OneGesture, ThreeGesture, TwoGesture } from './Gestures';
 
-export default function MyCamera() {
+export default function MyCamera({options, handleOptionClick, handleContinue, option}) {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const [number, setNumber] = useState(null);
@@ -22,7 +22,7 @@ export default function MyCamera() {
       setLoading(false);
       setInterval(() => {
         detect(net);
-      }, 3000);
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
@@ -70,10 +70,35 @@ export default function MyCamera() {
     runHandPose();
   }, []);
   useEffect(() => {
-    if (number !== null) {
-      console.log(`Detected Gesture: ${number}`);
+    // Ensure that number is valid and options are available before proceeding
+    if (number !== null && options.length > 0) {
+        const currentNumber = number;
+        setNumber(null); // Reset the number to prevent re-triggering the effect
+
+        const timer = setTimeout(() => {
+            switch (currentNumber) {
+                case 'one':
+                    handleOptionClick(options[0]);
+                    break;
+                case 'two':
+                    handleOptionClick(options[1]);
+                    break;
+                case 'three':
+                    handleOptionClick(options[2]);
+                    break;
+                case 'four':
+                    handleOptionClick(options[3]);
+                    break;
+                case 'five':
+                    handleContinue();
+                    break;
+            }
+        }, 500);
+        return () => clearTimeout(timer);
     }
-  }, [number]);
+}, [number, options]);
+
+
 
   if(loading){
     return (

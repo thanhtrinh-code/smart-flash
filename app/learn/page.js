@@ -91,7 +91,7 @@ export default function Page() {
         setIndex(0);
         setCorrect(0);
         const flashcard = shuffle(flashcards);
-        setDontKnow(flashcard);
+        setFlashcards(flashcard);
     }
   return (
     <Box width='100vw' height='100vh' bgcolor='white' position='relative'>
