@@ -37,7 +37,7 @@ export default function DontKnowButton({handleClick, answer, setOpenCamera, open
       }
     }}
   >
-    Don't Know
+    Don&apos;t Know
   </Button>
   
                           </Box>

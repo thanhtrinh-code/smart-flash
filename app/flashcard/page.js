@@ -105,7 +105,7 @@ export default function Page() {
       return () => {
         window.removeEventListener('keydown', handleKeyDown);
       };
-    }, [setFlipped, setIndex]);
+    }, [setFlipped, setIndex, flashcards]);
     if(index < 0){
       setIndex(0);
     }

@@ -52,7 +52,7 @@ export default function Page() {
           }
         }
         fetchFlashcards();
-    }, [setIsLoading, setFlashcards, flashcards, setOptions]);
+    }, [setIsLoading, setFlashcards, flashcards, setOptions, curIndex, search]);
     useEffect(() => {
 
         function handleKeyDown(e){
@@ -62,7 +62,7 @@ export default function Page() {
             window.addEventListener('keydown', handleKeyDown);
             return () => window.removeEventListener('keydown', handleKeyDown);
         }
-    }, [answer, curIndex]);
+    }, [answer, curIndex, flashcards.length]);
     useEffect(() => {
       function handleNumberClick(e){
         const number = parseInt(e.key, 10);
@@ -76,7 +76,7 @@ export default function Page() {
         window.addEventListener('keydown', handleNumberClick);
         return () => window.removeEventListener('keydown', handleNumberClick);
       }
-    }, [options, curIndex, option, flashcards]);
+    }, [options, curIndex, option, flashcards.length, flashcards]);
 
     
 

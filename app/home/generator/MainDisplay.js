@@ -24,7 +24,7 @@ export default function MainDisplay({
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  });
   if(index < 0){
     setIndex(0);
   }

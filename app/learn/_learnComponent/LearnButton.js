@@ -8,7 +8,7 @@ export default function LearnButton({setDontKnow, handleSubmit}) {
   onSubmit={handleSubmit}
 >
   <Button variant="outlined" onClick={() => setDontKnow(idk => !idk)}>
-    Don't know
+    Don&apos;t know
   </Button>
   <Button type="submit" variant="contained">
     Answer

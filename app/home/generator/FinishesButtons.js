@@ -100,7 +100,7 @@ export default function FinishesButtons({
     gap: 4
 
   }}>
-    <p>You didn't add any cards</p>
+    <p>You didn&apos;t add any cards</p>
     <Button
               variant='outlined'
               onClick={handlePrev}

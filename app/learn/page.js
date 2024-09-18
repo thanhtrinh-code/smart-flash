@@ -48,7 +48,7 @@ export default function Page() {
           }
         }
         fetchFlashcards();
-    }, [setIsLoading, setFlashcards, flashcards]);
+    }, [setIsLoading, setFlashcards, flashcards, search]);
     useEffect(() => {
         function handleListen(e){
             handleContinue();
