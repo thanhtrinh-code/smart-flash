@@ -10,6 +10,7 @@ import ContinueButton from '../learn/_learnComponent/ContinueButton';
 import Congrats from './_quizComponent/Congrats';
 import DontKnowButton from './_quizComponent/DontKnowButton';
 import MyCamera from './_handpose/MyCamera';
+import QuizEndDisplay from './_handpose/QuizEndDisplay';
 
 export default function Page() {
     const searchParams = useSearchParams();
@@ -58,10 +59,17 @@ export default function Page() {
         function handleKeyDown(e){
             handleContinue();
         }
+        function handleKeyEnter(e){
+          if(e.key === 'Enter'){
+            handleKeyEnter
+          }
+          
+        }
         if(answer && curIndex < flashcards.length){
             window.addEventListener('keydown', handleKeyDown);
             return () => window.removeEventListener('keydown', handleKeyDown);
         }
+
     }, [answer, curIndex, flashcards?.length]);
     useEffect(() => {
       function handleNumberClick(e){
@@ -85,7 +93,6 @@ export default function Page() {
       setCurIndex(0);
       setAnswer(false);
       setOption(null);
-      setOpenCamera(false);
       setFlashcards(null);
 
     }
@@ -149,27 +156,7 @@ export default function Page() {
                     </Typography>
                     </Box>
                 </Box>
-                <Box
-      width="80%"
-      maxWidth="600px"
-      bgcolor="#e0ffe0" // Light green background for a congratulatory feel
-      borderRadius="8px"
-      boxShadow="0px 4px 8px rgba(0, 0, 0, 0.2)"
-      p={4}
-      textAlign="center"
-      mx="auto" // Centers the box horizontally
-      my={4}   // Adds margin top and bottom
-    >
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#4caf50' }}>
-      🎉 Congratulations! 🎉
-      </Typography>
-      <Typography variant="h6" paragraph >
-        Well Done
-      </Typography>
-      <Button type='submit' variant="contained" color="success" onClick={handleReset}>
-        Restart 🚀
-      </Button>
-    </Box>
+                <QuizEndDisplay handleReset={handleReset}/>
         </Box>
         </Box>
             </>
