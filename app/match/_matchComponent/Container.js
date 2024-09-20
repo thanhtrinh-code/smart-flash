@@ -1,13 +1,7 @@
 import { Box, CardActionArea, CardContent, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-/**
- * 
- * Randonmized flashcards in pair of indexes because
- * Flashcards length needs to be max length of 6 sets or 12 cards total
- * Flashcards that pass in container shuffle
- */
 
-export default function Container({flashcards, timer, nextSetOf6, gameover}) {
+export default function Container({flashcards, timer, nextSetOf6, gameover, setCorrect}) {
     const [selectedCard, setSelectedCard] = useState([]);
     const [randomizedCards, setRandomizedCard] = useState(null);
     const [correctSets, setCorrectSets] = useState([]); 
@@ -22,7 +16,6 @@ export default function Container({flashcards, timer, nextSetOf6, gameover}) {
         if(flashcards && !gameover){
             const shuffledFlashcards = [...flashcards]; // Make a copy to avoid mutation
             shuffle(shuffledFlashcards);
-            console.log('Shuffled cards');
             setRandomizedCard(shuffledFlashcards);
         }
     }, [flashcards]);
@@ -36,19 +29,19 @@ export default function Container({flashcards, timer, nextSetOf6, gameover}) {
             return () => clearTimeout(timer);
         }else{
             if(correctSets.length === randomizedCards?.length){
-              const timer = setTimeout(() => {
-                setSelectedCard([]);
-                setCorrectSets([]);
-                nextSetOf6();
-              }, 1000);
-              return () => clearTimeout(timer);
+              setSelectedCard([]);
+              setCorrectSets([]);
+              setRandomizedCard(null);
+              nextSetOf6();
+            
             }
         }
     }, [timer, correctSets, randomizedCards, setSelectedCard, setCorrectSets])
     useEffect(() => {
         if(selectedCard.length === 2){
             if(selectedCard[0].position === selectedCard[1].position){
-                setCorrectSets((prev) => [...prev, selectedCard[0], selectedCard[1]]);
+              setCorrect(prev => prev + 1);
+              setCorrectSets((prev) => [...prev, selectedCard[0], selectedCard[1]]);
             }
             setTimeout(() => {
                 setSelectedCard([]);
@@ -65,32 +58,31 @@ export default function Container({flashcards, timer, nextSetOf6, gameover}) {
   return (
     <Grid 
   container 
-  spacing={3} // Adjust spacing to fit 12 cards comfortably
+  spacing={3} 
   sx={{ 
     width: '100%', 
     height: '100%',
-    px: { xs: 2, sm: 3, md: 4 }, // Padding to keep content away from the edges
+    px: { xs: 2, sm: 3, md: 4 }, 
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexWrap: 'wrap', // Wraps items when there is not enough room for them to fit in a single row
+    flexWrap: 'wrap', 
   }}
 >
   {randomizedCards?.map((card, index) => (
     <Grid 
       item 
-      xs={6} // 2 cards per row on extra small screens (6 columns each)
-      sm={4} // 3 cards per row on small screens (4 columns each)
-      md={3} // 4 cards per row on medium screens (3 columns each)
+      xs={6} 
+      sm={4} 
+      md={3}
       key={index} 
       sx={{ 
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center',
-        p: 1 // Optional padding around each grid item
+        p: 1 
       }}
     >
-      {/* Front of card */}
       <CardActionArea sx={{ width: '30rem', height: '13rem' }} onClick={() => handleSelectCard(card)} disabled={correctSets.includes(card)}>
         <CardContent
           sx={{
