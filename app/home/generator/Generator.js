@@ -135,7 +135,8 @@ export default function Generator({setFeature}) {
   }
   function handleAdd(flashcard){
     setAddFlashcard((prevFlashcards) => [...prevFlashcards, flashcard]);
-    toast.success('Flashcard has been added')
+    toast.success('Flashcard has been added');
+    setTimeout(handleNext, 1500);
   }
   function handleDelete(flashcard){
     setAddFlashcard((prevFlashcards) => prevFlashcards.filter(card => card!== flashcard));

@@ -16,7 +16,7 @@ export default function Page() {
     const search = searchParams.get('id');
 
     const [flashcards, setFlashcards] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState(null);
     const [curIndex, setCurIndex] = useState(0);
     const [correct, setCorrect] = useState(0);
@@ -62,7 +62,7 @@ export default function Page() {
             window.addEventListener('keydown', handleKeyDown);
             return () => window.removeEventListener('keydown', handleKeyDown);
         }
-    }, [answer, curIndex, flashcards.length]);
+    }, [answer, curIndex, flashcards?.length]);
     useEffect(() => {
       function handleNumberClick(e){
         const number = parseInt(e.key, 10);
@@ -76,7 +76,7 @@ export default function Page() {
         window.addEventListener('keydown', handleNumberClick);
         return () => window.removeEventListener('keydown', handleNumberClick);
       }
-    }, [options, curIndex, option, flashcards.length, flashcards]);
+    }, [options, curIndex, option, flashcards?.length, flashcards]);
 
     
 

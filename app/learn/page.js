@@ -21,7 +21,7 @@ export default function Page() {
 
     
     const [flashcards, setFlashcards] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [index, setIndex] = useState(0);
     const [input, setInput] = useState('');
     const [correct, setCorrect] = useState(0);
