@@ -20,12 +20,12 @@ SmartFlash is an AI-powered flashcard application designed to enhance learning a
 - **Tech Stack**: Next.js, Material UI, OpenAI, Gemini Ai, Stripe API, Firebase, Clerk, Tensorflow
 
 ## Deployment
-SmartFlash is deployed and accessible at the following URL: [Your Public URL](https://smart-flash.vercel.app).
+SmartFlash is deployed and accessible at the following URL: [SmartFlash](https://smart-flash.vercel.app).
 
 ## Demo
 Here’s a demo of SmartFlash:
 
-[![Watch the video](https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg)](https://youtu.be/iqfY54_vvp8)
+[![YouTube](http://i.ytimg.com/vi/iqfY54_vvp8/hqdefault.jpg)](https://www.youtube.com/watch?v=iqfY54_vvp8)
 
 
 
