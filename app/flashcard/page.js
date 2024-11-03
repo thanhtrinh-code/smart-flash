@@ -76,6 +76,7 @@ export default function Page() {
             setIsLoading(false);
           }
         }
+        // Edit flashcard wont apply since getting from local search
         if(localStorage.getItem(`flashcards_${search}`)){
           const flashcard = JSON.parse(localStorage.getItem(`flashcards_${search}`));
           setFlashcards(flashcard);
