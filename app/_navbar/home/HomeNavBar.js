@@ -1,14 +1,11 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { Box, Button, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AiOutlineMenuFold } from "react-icons/ai";
 
 export default function HomeNavBar({feature, handleChange}) {
     const [open, setOpen] = useState(false);
-    const pathname = usePathname();
-    const test = pathname.slice(6, pathname.length);
     function handleToggle(){
         setOpen(open => !open);
     }

@@ -9,12 +9,14 @@ export default function Images({feature}) {
         height: {xs: 200, sm: 300, md: 450, lg: 550, xl: 650},
         position: 'relative'
       }}>
-        {feature === 'generator' && <Image src='/generator.webp' 
+        {feature === 'generator' && <Image src='/generator.png' 
         layout="fill" objectFit="contain" alt='Generator'/> }
-        {feature === 'games' && <Image src='/games.webp' 
-        layout="fill" objectFit="contain" alt='Games'/> }
-        {feature === 'collection' && <Image src='/collection.webp' 
-        layout="fill" objectFit="contain" alt='Collection'/> }
+        {feature === 'match' && <Image src='/match.png' 
+        layout="fill" objectFit="contain" alt='Matching'/> }
+        {feature === 'quiz' && <Image src='/quiz.png' 
+        layout="fill" objectFit="contain" alt='Quiz'/> }
+        {feature === 'answer' && <Image src='/answer.png' 
+        layout="fill" objectFit="contain" alt='Answer'/> }
       </Box>
   )
 }

@@ -13,23 +13,32 @@ export default function TabsButton({feature, handleChange}) {
       }}>
           Generator
         </Button>
-        <Button variant="contained" onClick={() => handleChange('games')} sx={{bgcolor: feature === 'games' ? 'white' : 'inherit', 
-        color: feature === 'games' ? '#181e32' : 'gray', border: '1px solid inherit', borderRadius: 3,
+        <Button variant="contained" onClick={() => handleChange('match')} sx={{bgcolor: feature === 'match' ? 'white' : 'inherit', 
+        color: feature === 'match' ? '#181e32' : 'gray', border: '1px solid inherit', borderRadius: 3,
         '&:hover': {
-          bgcolor: feature === 'games' ? 'white' : 'inherit', 
-          color: feature === 'games' ? '#181e32' : 'gray'
+          bgcolor: feature === 'match' ? 'white' : 'inherit', 
+          color: feature === 'match' ? '#181e32' : 'gray'
         }
       }}>
-          Games
+          Match
         </Button>
-        <Button variant="contained" onClick={() => handleChange('collection')} sx={{bgcolor: feature === 'collection' ? 'white' : 'inherit', 
-        color: feature === 'collection' ? '#181e32' : 'gray', border: '1px solid inherit', borderRadius: 3,
+        <Button variant="contained" onClick={() => handleChange('quiz')} sx={{bgcolor: feature === 'quiz' ? 'white' : 'inherit', 
+        color: feature === 'quiz' ? '#181e32' : 'gray', border: '1px solid inherit', borderRadius: 3,
         '&:hover': {
-          bgcolor: feature === 'collection' ? 'white' : 'inherit', 
-          color: feature === 'collection' ? '#181e32' : 'gray'
+          bgcolor: feature === 'quiz' ? 'white' : 'inherit', 
+          color: feature === 'quiz' ? '#181e32' : 'gray'
         }
       }}>
-          Collection
+          Quiz
+        </Button>
+        <Button variant="contained" onClick={() => handleChange('answer')} sx={{bgcolor: feature === 'answer' ? 'white' : 'inherit', 
+        color: feature === 'answer' ? '#181e32' : 'gray', border: '1px solid inherit', borderRadius: 3,
+        '&:hover': {
+          bgcolor: feature === 'answer' ? 'white' : 'inherit', 
+          color: feature === 'answer' ? '#181e32' : 'gray'
+        }
+      }}>
+          Question
         </Button>
     </>
   )

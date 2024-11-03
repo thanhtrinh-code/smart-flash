@@ -1,4 +1,5 @@
 import Features from "./Features";
+import Footer from "./Footer";
 import Pricing from "./Pricing";
 import Products from "./Products";
 
@@ -9,6 +10,7 @@ export default function HeaderLayout() {
         <Products/>
         <Features/>
         <Pricing/>
+        <Footer/>
     </>
   )
 }
