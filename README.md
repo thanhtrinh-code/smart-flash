@@ -23,7 +23,11 @@ SmartFlash is an AI-powered flashcard application designed to enhance learning a
 SmartFlash is deployed and accessible at the following URL: [Your Public URL](https://smart-flash.vercel.app).
 
 ## Demo
-Watch the demo of SmartFlash on YouTube: [YouTube Link](https://youtu.be/iqfY54_vvp8).
+Here’s a demo of SmartFlash:
+
+[![Watch the video](https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg)](https://youtu.be/iqfY54_vvp8)
+
+
 
 ---
 
