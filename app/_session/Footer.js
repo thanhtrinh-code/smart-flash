@@ -75,7 +75,7 @@ export default function Footer() {
     }}
 >
     <Typography variant="h6" sx={{ color: 'white', fontSize: '1.2rem' }}>
-        &copy; 2023 SmartFlash. All rights reserved.
+        &copy; 2023 SmartFlash. All rights reserve
     </Typography>
 </Box>
 </Box>
